@@ -1,13 +1,13 @@
 package com.treinamento.ecommerce.service.categoria.Impl;
 
 import com.treinamento.ecommerce.domain.Categoria;
+import com.treinamento.ecommerce.dto.CategoriaDTO;
 import com.treinamento.ecommerce.exception.CategoriaNotFoundException;
 import com.treinamento.ecommerce.repository.CategoriaRepository;
 import com.treinamento.ecommerce.service.categoria.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -53,9 +53,14 @@ public class CategoriaServiceImpl implements CategoriaService {
         categoriaRepository.deleteById(id);
     }
 
-
+    @Override
     public Page<Categoria> findPage(int page, int size,String orderBy,String direction) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
         return categoriaRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public Categoria fromDTO(CategoriaDTO objDTO){
+        return new Categoria(objDTO.getId(),objDTO.getNome());
     }
 }

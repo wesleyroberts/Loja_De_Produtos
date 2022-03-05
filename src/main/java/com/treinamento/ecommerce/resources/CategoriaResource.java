@@ -1,6 +1,7 @@
 package com.treinamento.ecommerce.resources;
 
 import com.treinamento.ecommerce.domain.Categoria;
+import com.treinamento.ecommerce.dto.CategoriaDTO;
 import com.treinamento.ecommerce.exception.CategoriaNotFoundException;
 import com.treinamento.ecommerce.service.categoria.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -42,12 +46,16 @@ public class CategoriaResource {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Categoria>create(@RequestBody Categoria categoria){
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.create(categoria));
+    public ResponseEntity<Void>create(@Valid @RequestBody CategoriaDTO categoriaDTO){
+        Categoria categoria = categoriaService.fromDTO(categoriaDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(categoria.getId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/update")
     public ResponseEntity<Categoria>update(@RequestBody Categoria categoria, long id) throws CategoriaNotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.update(categoria,id));
     }
+
+
 }
