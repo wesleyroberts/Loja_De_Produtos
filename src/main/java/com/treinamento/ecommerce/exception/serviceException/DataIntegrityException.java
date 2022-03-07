@@ -1,13 +1,13 @@
 package com.treinamento.ecommerce.exception.serviceException;
 
-public class ObjectNotFoundException extends RuntimeException{
+public class DataIntegrityException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public ObjectNotFoundException(String msg) {
+    public DataIntegrityException(String msg) {
         super(msg);
     }
 
-    public ObjectNotFoundException(String msg, Throwable cause) {
+    public DataIntegrityException(String msg, Throwable cause) {
         super(msg, cause);
     }
 }

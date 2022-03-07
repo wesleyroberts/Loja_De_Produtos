@@ -2,10 +2,12 @@ package com.treinamento.ecommerce.service.categoria.Impl;
 
 import com.treinamento.ecommerce.domain.Categoria;
 import com.treinamento.ecommerce.dto.CategoriaDTO;
-import com.treinamento.ecommerce.exception.CategoriaNotFoundException;
+import com.treinamento.ecommerce.exception.serviceException.DataIntegrityException;
+import com.treinamento.ecommerce.exception.serviceException.ObjectNotFoundException;
 import com.treinamento.ecommerce.repository.CategoriaRepository;
 import com.treinamento.ecommerce.service.categoria.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,28 +31,37 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-    public Categoria getById(long id)throws CategoriaNotFoundException {
-        return categoriaRepository.findById(id).get();
+    public Categoria getById(long id)throws ObjectNotFoundException {
+        return checkIfExist(id);
     }
 
     @Override
     public Categoria create(Categoria categoria) {
+        categoria.setId(null);
         return categoriaRepository.save(categoria);
     }
 
     @Override
-    public Categoria update(Categoria categoria, long id) throws CategoriaNotFoundException {
+    public Categoria update(Categoria categoria, long id) throws ObjectNotFoundException {
+        checkIfExist(id);
         return categoriaRepository.save(categoria)  ;
     }
 
     @Override
-    public Categoria checkIfExist(long id) throws CategoriaNotFoundException{
-        return categoriaRepository.findById(id).orElseThrow(CategoriaNotFoundException::new);
+    public Categoria checkIfExist(long id) throws ObjectNotFoundException{
+        return categoriaRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: "+id + " ,tipo "+Categoria.class.getName()));
     }
 
     @Override
     public void delete(long id) {
-        categoriaRepository.deleteById(id);
+        checkIfExist(id);
+        try{
+            categoriaRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException("Não é possivel excluir categoria que possui produtos.");
+        }
+
+
     }
 
     @Override

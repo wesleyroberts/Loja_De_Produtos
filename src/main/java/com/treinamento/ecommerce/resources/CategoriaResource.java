@@ -2,7 +2,6 @@ package com.treinamento.ecommerce.resources;
 
 import com.treinamento.ecommerce.domain.Categoria;
 import com.treinamento.ecommerce.dto.CategoriaDTO;
-import com.treinamento.ecommerce.exception.CategoriaNotFoundException;
 import com.treinamento.ecommerce.service.categoria.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +26,7 @@ public class CategoriaResource {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Categoria> getCategoriaById(@PathVariable long id) throws CategoriaNotFoundException {
+    public ResponseEntity<Categoria> getCategoriaById(@PathVariable long id){
         return ResponseEntity.ok().body(categoriaService.getById(id));
     }
 
@@ -53,7 +52,7 @@ public class CategoriaResource {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Categoria>update(@RequestBody Categoria categoria, long id) throws CategoriaNotFoundException {
+    public ResponseEntity<Categoria>update(@RequestBody Categoria categoria, long id){
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.update(categoria,id));
     }
 
