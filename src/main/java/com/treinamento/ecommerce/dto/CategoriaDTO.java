@@ -1,4 +1,5 @@
 package com.treinamento.ecommerce.dto;
+import com.treinamento.ecommerce.domain.Categoria;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,8 +16,9 @@ public class CategoriaDTO implements Serializable {
 
     public CategoriaDTO(){}
 
-    public CategoriaDTO(String nome){
-        this.nome = nome;
+    public CategoriaDTO(Categoria categoria){
+        this.nome = categoria.getNome();
+        this.id = categoria.getId();
     }
 
     public Long getId() {
