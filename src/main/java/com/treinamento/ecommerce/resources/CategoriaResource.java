@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/categorias")
@@ -31,17 +32,21 @@ public class CategoriaResource {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Categoria>>findAllCategoria(){
-        return ResponseEntity.status(HttpStatus.FOUND).body(categoriaService.findAll());
+    public ResponseEntity<List<CategoriaDTO>>findAllCategoria(){
+        List<Categoria> list = categoriaService.findAll();
+        List<CategoriaDTO> listDTO = list.stream().map(CategoriaDTO::new).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.FOUND).body(listDTO);
     }
 
     @RequestMapping(value ="/page", method = RequestMethod.GET)
-    public ResponseEntity<Page<Categoria>> findPage(
+    public ResponseEntity<Page<CategoriaDTO>> findPage(
             @RequestParam(value = "page",defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "24") int size,
             @RequestParam(value = "orderBy",defaultValue = "nome") String orderBy,
             @RequestParam(value = "direction",defaultValue = "ASC") String direction){
-        return ResponseEntity.status(HttpStatus.FOUND).body(categoriaService.findPage(page, size, orderBy, direction));
+        Page<Categoria> list = categoriaService.findPage(page, size, orderBy, direction);
+        Page<CategoriaDTO> listDto = list.map(CategoriaDTO::new);
+        return ResponseEntity.status(HttpStatus.FOUND).body(listDto);
     }
 
     @PostMapping("/create")
