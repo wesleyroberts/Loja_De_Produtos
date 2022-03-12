@@ -26,9 +26,11 @@ public class CategoriaResource {
         this.categoriaService = categoriaService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Categoria> getCategoriaById(@PathVariable long id){
-        return ResponseEntity.ok().body(categoriaService.getById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoriaDTO> getCategoriaById(@PathVariable long id){
+        Categoria categoria = categoriaService.getById(id);
+        CategoriaDTO categoriaDTO = new CategoriaDTO(categoria);
+        return ResponseEntity.ok().body(categoriaDTO);
     }
 
     @GetMapping("/all")
@@ -50,16 +52,23 @@ public class CategoriaResource {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void>create(@Valid @RequestBody CategoriaDTO categoriaDTO){
-        Categoria categoria = categoriaService.fromDTO(categoriaDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(categoria.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<Void> create(@Valid @RequestBody CategoriaDTO categoriaDTO){
+        Categoria categoria = new Categoria();
+        categoria.setNome(categoriaDTO.getNome());
+        categoria = categoriaService.create(categoria);
+        String urlObj =  ("localhost:8080/categorias/"+categoria.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).header("location", urlObj).build();
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Categoria>update(@RequestBody Categoria categoria, long id){
+    public ResponseEntity<Categoria>update(@RequestBody CategoriaDTO categoriaDTO, long id){
+        Categoria categoria = categoriaService.fromDTO(categoriaDTO);
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.update(categoria,id));
     }
 
-
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String>delete(@PathVariable Long id){
+        categoriaService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
+    }
 }
