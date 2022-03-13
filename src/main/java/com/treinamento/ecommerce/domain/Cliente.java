@@ -21,7 +21,7 @@ public class Cliente implements Serializable {
     @Column(nullable = false)
     private String cpfOuCnpj;
     @Column(nullable = false)
-    private int tipo;
+    private Integer tipo;
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos = new ArrayList<>();
     @ElementCollection
@@ -32,7 +32,7 @@ public class Cliente implements Serializable {
 
     public Cliente(){}
 
-    public Cliente(Long id, String nome, String email, String cpfOuCnpj, int tipo) {
+    public Cliente(Long id, String nome, String email, String cpfOuCnpj, Integer tipo) {
         this.id = id;
         this.nome = nome;
         this.email = email;
