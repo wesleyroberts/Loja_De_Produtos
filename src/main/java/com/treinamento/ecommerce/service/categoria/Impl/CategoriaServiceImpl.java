@@ -43,8 +43,13 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public Categoria update(Categoria categoria, long id) throws ObjectNotFoundException {
-        checkIfExist(id);
+        Categoria newCategoria = checkIfExist(id);
+        updateData(newCategoria,categoria);
         return categoriaRepository.save(categoria)  ;
+    }
+
+    private void updateData(Categoria newCategoria, Categoria categoria) {
+        newCategoria.setNome(categoria.getNome());
     }
 
     @Override
