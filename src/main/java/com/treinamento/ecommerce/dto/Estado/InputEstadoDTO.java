@@ -1,10 +1,10 @@
-package com.treinamento.ecommerce.dto;
+package com.treinamento.ecommerce.dto.Estado;
 
-public class EstadoDTO {
+public class InputEstadoDTO {
 
     private String nome;
 
-    public EstadoDTO(){}
+    public InputEstadoDTO(){}
 
     public String getNome() {
         return nome;
